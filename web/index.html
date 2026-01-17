@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Stats | Code Analytics</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <div class="brand">
+                <h1>Project Stats</h1>
+                <span class="version-tag">v1.0.4</span>
+            </div>
+            <p class="subtitle">Advanced codebase statistical analysis</p>
+        </header>
+
+        <main>
+            <section class="config-panel">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="folderPath">Project Directory</label>
+                        <input type="text" id="folderPath" placeholder="/path/to/repository" />
+                    </div>
+                    <div class="input-group narrow">
+                        <label for="topFiles">File Limit</label>
+                        <input type="number" id="topFiles" value="5" min="1" max="50" />
+                    </div>
+                    <button id="scanBtn" class="btn-primary">Analyze Project</button>
+                </div>
+            </section>
+
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Processing repository metadata...</p>
+            </div>
+
+            <section id="results" class="results hidden">
+                <div class="stats-grid">
+                    <div class="metric-card">
+                        <label>Total Files</label>
+                        <h3 id="totalFiles">0</h3>
+                    </div>
+                    <div class="metric-card">
+                        <label>Lines of Code</label>
+                        <h3 id="totalLines">0</h3>
+                    </div>
+                    <div class="metric-card">
+                        <label>Newest File</label>
+                        <h3 id="newestFile" class="mono">-</h3>
+                    </div>
+                    <div class="metric-card">
+                        <label>Oldest File</label>
+                        <h3 id="oldestFile" class="mono">-</h3>
+                    </div>
+                </div>
+
+                <div class="content-split">
+                    <div class="data-section">
+                        <div class="section-header">
+                            <h2>Language Distribution</h2>
+                        </div>
+                        <div id="languageChart" class="chart-container"></div>
+                        <div id="languageList" class="data-list"></div>
+                    </div>
+
+                    <div class="data-section">
+                        <div class="section-header">
+                            <h2>Top Largest Files</h2>
+                        </div>
+                        <div id="largestFiles" class="data-list mono"></div>
+                    </div>
+                </div>
+
+                <div class="data-section">
+                    <div class="section-header">
+                        <h2>Anomalies Detected</h2>
+                    </div>
+                    <div class="anomaly-row">
+                        <div class="anomaly-item">
+                            <span class="val" id="emptyFiles">0</span>
+                            <span class="desc">Empty Files</span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="anomaly-item">
+                            <span class="val" id="smallFiles">0</span>
+                            <span class="desc">Redundant Files (&lt; 5 lines)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="results-actions">
+                    <button id="exportBtn" class="btn-outline">Download Report (.JSON)</button>
+                </footer>
+            </section>
+
+            <div id="error" class="error-banner hidden">
+                <p id="errorMessage"></p>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>Engine: Python 3.12 / Fire Framework &nbsp;&bull;&nbsp; 2026 Analytics Core</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
