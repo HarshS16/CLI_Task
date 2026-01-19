@@ -175,6 +175,79 @@ CLI_Task/
     └── script.js        # Frontend logic
 ```
 
+## Design Decisions
+
+### Why Python Fire for CLI?
+
+[Python Fire](https://github.com/google/python-fire) was chosen over alternatives like `argparse` or `click` for several reasons:
+
+| Consideration | Decision |
+|---------------|----------|
+| **Zero boilerplate** | Fire automatically generates CLI from class methods without decorators or argument definitions |
+| **Self-documenting** | Method signatures become CLI arguments; docstrings become help text |
+| **Rapid development** | Adding new commands requires only adding new methods |
+| **Maintained by Google** | Active development and production-tested |
+
+Alternative considered: `argparse` would require 30+ lines of argument configuration for the same functionality.
+
+### Why Flask for Web Server?
+
+Flask was selected as the web framework for the GUI backend:
+
+| Consideration | Decision |
+|---------------|----------|
+| **Lightweight** | Minimal overhead for a single-endpoint API |
+| **No ORM needed** | Project doesn't require database connectivity |
+| **Simple routing** | Only two routes: static files and `/api/scan` |
+| **Rapid prototyping** | Full server implemented in ~100 lines |
+
+Alternative considered: FastAPI offers async support, but synchronous file I/O is acceptable for local scanning.
+
+### Why Vanilla JavaScript?
+
+The frontend uses plain HTML/CSS/JS without frameworks:
+
+| Consideration | Decision |
+|---------------|----------|
+| **No build step** | Files served directly without compilation |
+| **Zero dependencies** | No npm, webpack, or node_modules |
+| **Portability** | Works in any browser without polyfills |
+| **Simplicity** | Single-page application with minimal state |
+
+Alternative considered: React would add complexity for a single-view dashboard.
+
+### Architecture Overview
+
+```
+┌─────────────────┐     HTTP POST      ┌─────────────────┐
+│   Browser GUI   │ ─────────────────► │   Flask Server  │
+│  (JavaScript)   │ ◄───────────────── │   (Python)      │
+└─────────────────┘     JSON Response  └────────┬────────┘
+                                                │
+                                                │ os.walk()
+                                                ▼
+                                       ┌─────────────────┐
+                                       │   File System   │
+                                       └─────────────────┘
+
+┌─────────────────┐                    ┌─────────────────┐
+│   CLI (Fire)    │ ──── Direct ────►  │   File System   │
+└─────────────────┘      Access        └─────────────────┘
+```
+
+Both interfaces share the same scanning logic:
+- **CLI**: Direct function calls via Fire
+- **Web**: HTTP API wrapper around the same logic
+
+### Performance Considerations
+
+| Decision | Rationale |
+|----------|-----------|
+| **Generator for line counting** | `sum(1 for _ in f)` avoids loading entire file into memory |
+| **Directory exclusion during walk** | Modifying `dirs[:]` in-place prevents descending into `node_modules` |
+| **Single-pass scanning** | All metrics collected in one traversal |
+| **Relative path computation** | Calculated once per file, not on display |
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
