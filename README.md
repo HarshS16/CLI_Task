@@ -248,6 +248,15 @@ Both interfaces share the same scanning logic:
 | **Single-pass scanning** | All metrics collected in one traversal |
 | **Relative path computation** | Calculated once per file, not on display |
 
+
+
+## Sample Output
+![Project Stats CLI  Interface](image.png)
+![Project Stats WEB  Interface](image-1.png)
+![WEB Interface](image-2.png)
+![ Generated Text Report ](image-3.png)
+
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
